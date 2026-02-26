@@ -470,12 +470,44 @@ const Contact = () => {
 
           <div id="booking" className="bg-white p-8 lg:p-12 rounded-[40px] shadow-2xl border border-gray-100">
             <h3 className="text-2xl font-display font-bold text-brand-900 mb-6">Book an Appointment</h3>
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form 
+              className="space-y-6" 
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                const data = {
+                  name: formData.get('name'),
+                  phone: formData.get('phone'),
+                  date: formData.get('date'),
+                  message: formData.get('message'),
+                };
+
+                try {
+                  const response = await fetch('/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                  });
+
+                  if (response.ok) {
+                    alert('Appointment booked successfully! We will contact you soon.');
+                    (e.target as HTMLFormElement).reset();
+                  } else {
+                    const error = await response.json();
+                    alert(`Error: ${error.error || 'Failed to book appointment'}`);
+                  }
+                } catch (err) {
+                  alert('Network error. Please try again later.');
+                }
+              }}
+            >
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
                   <input
+                    name="name"
                     type="text"
+                    required
                     placeholder="John Doe"
                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all outline-none"
                   />
@@ -483,7 +515,9 @@ const Contact = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
                   <input
+                    name="phone"
                     type="tel"
+                    required
                     placeholder="0802 000 0000"
                     className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all outline-none"
                   />
@@ -492,13 +526,16 @@ const Contact = () => {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Preferred Date</label>
                 <input
+                  name="date"
                   type="date"
+                  required
                   className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all outline-none"
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Message (Optional)</label>
                 <textarea
+                  name="message"
                   rows={4}
                   placeholder="Tell us about your dental concerns..."
                   className="w-full px-5 py-4 rounded-2xl bg-gray-50 border-transparent focus:bg-white focus:border-brand-500 focus:ring-4 focus:ring-brand-100 transition-all outline-none resize-none"
