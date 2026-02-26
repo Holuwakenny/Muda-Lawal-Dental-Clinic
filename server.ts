@@ -13,17 +13,24 @@ async function startServer() {
   const PORT = 3000;
 
   // Initialize Database
-  const db = new Database("appointments.db");
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS appointments (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      date TEXT NOT NULL,
-      message TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+  let db: Database.Database;
+  try {
+    db = new Database("appointments.db");
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS appointments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        date TEXT NOT NULL,
+        message TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log("Database initialized successfully.");
+  } catch (err) {
+    console.error("Failed to initialize database:", err);
+    process.exit(1);
+  }
 
   app.use(express.json());
 
@@ -57,8 +64,14 @@ async function startServer() {
     
     app.use(vite.middlewares);
 
-    app.use("*", async (req, res, next) => {
+    app.get("*", async (req, res, next) => {
       const url = req.originalUrl;
+      
+      // Skip for API routes or asset-like requests that should have been handled by Vite
+      if (url.startsWith("/api") || url.includes(".")) {
+        return next();
+      }
+
       try {
         let template = fs.readFileSync(path.resolve(__dirname, "index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
