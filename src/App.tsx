@@ -471,36 +471,36 @@ const Contact = () => {
           <div id="booking" className="bg-white p-8 lg:p-12 rounded-[40px] shadow-2xl border border-gray-100">
             <h3 className="text-2xl font-display font-bold text-brand-900 mb-6">Book an Appointment</h3>
             <form 
+              name="appointments"
+              method="POST"
+              data-netlify="true"
               className="space-y-6" 
               onSubmit={async (e) => {
+                // We still use fetch to provide a better UX, but it now works with Netlify Forms
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
-                const data = {
-                  name: formData.get('name'),
-                  phone: formData.get('phone'),
-                  date: formData.get('date'),
-                  message: formData.get('message'),
-                };
-
+                
                 try {
-                  const response = await fetch('/api/appointments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data),
+                  const response = await fetch("/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData as any).toString(),
                   });
 
                   if (response.ok) {
-                    alert('Appointment booked successfully! We will contact you soon.');
+                    alert('Appointment request sent successfully! We will contact you soon.');
                     (e.target as HTMLFormElement).reset();
                   } else {
-                    const error = await response.json();
-                    alert(`Error: ${error.error || 'Failed to book appointment'}`);
+                    alert('Failed to send request. Please try calling us directly.');
                   }
                 } catch (err) {
-                  alert('Network error. Please try again later.');
+                  alert('Network error. Please try again later or call us.');
                 }
               }}
             >
+              {/* Hidden input for Netlify Forms */}
+              <input type="hidden" name="form-name" value="appointments" />
+              
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
