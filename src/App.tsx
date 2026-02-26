@@ -457,7 +457,7 @@ const Contact = () => {
 
             <div className="mt-12 rounded-3xl overflow-hidden h-64 shadow-inner border border-gray-100">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m12!1m3!1d3963.431265893456!2d3.265559675865611!3d6.550431593442378!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8f274c79440b%3A0xdb61c296af6e369!2sMuda%20Lawal%20Dental%20Clinic!5e0!3m2!1sen!2sng!4v1708980000000!5m2!1sen!2sng"
+                src="https://maps.google.com/maps?q=Muda%20Lawal%20Dental%20Clinic%2027%20Ikotun%20Idimu%20Road%20Lagos&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
