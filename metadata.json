@@ -1,0 +1,7 @@
+{
+  "name": "Muda Lawal Dental Clinic",
+  "description": "Professional dental clinic in Alimosho, Lagos, offering teeth cleaning, extraction, fillings, braces, and more.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
